@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const superAdminSchema = new mongoose.Schema(
   {
-    username: {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    adminId: {
       type: String,
       required: true,
       unique: true,
@@ -24,6 +29,6 @@ const superAdminSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const SuperAdmin = mongoose.model("SuperAdmin", superAdminSchema);
+const SuperAdmin = mongoose.model("SuperAdmins", superAdminSchema);
 
 module.exports = SuperAdmin;

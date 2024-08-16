@@ -1,5 +1,13 @@
 const { superAdminSchema } = require("../validators/adminValidator");
 const SuperAdmin = require("../models/SuperAdmin");
+const bcrypt = require("bcrypt");
+const {
+  DynamoDBClient,
+  DeleteItemCommand,
+  GetItemCommand,
+} = require("@aws-sdk/client-dynamodb");
+
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 async function createSuperAdmin(req, res) {
   const { error } = superAdminSchema.validate(req.body);
@@ -8,19 +16,34 @@ async function createSuperAdmin(req, res) {
   }
 
   try {
-    const superAdminExists = await SuperAdmin.findOne();
-    if (superAdminExists) {
-      return res.status(400).json({ msg: "Super Admin already exists" });
+    const { name, email, pwd, adminId } = req.body;
+
+    const getParams = {
+      TableName: "otp",
+      Key: {
+        email: { S: email },
+      },
+    };
+    const response = await client.send(new GetItemCommand(getParams));
+    if (!response.Item || !response.Item.verified.BOOL) {
+      return res.json({ status: "err", msg: "failed creating user" });
     }
 
-    const { username, email, pwd } = req.body;
+    const params = {
+      TableName: "otp",
+      Key: {
+        email: { S: email },
+      },
+    };
+    await client.send(new DeleteItemCommand(params));
 
+    const password = await bcrypt.hash(pwd, 10);
     const newSuperAdmin = new SuperAdmin({
-      username,
+      name,
       email,
-      pwd,
+      adminId,
+      pwd: password,
     });
-
     await newSuperAdmin.save();
 
     res.status(201).json({ msg: "Super Admin created successfully" });
