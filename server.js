@@ -3,8 +3,18 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 
+//?Middleware
+
+app.use(express.json());
+app.use("/super", require("./routes/superAdmin"));
+app.use(require("./middlewares/checkSuperAdmin"));
+
+app.get("/usr", async (req, res) => {
+  res.send("Success");
+});
+
 try {
-  connectDB().then(()=>
+  connectDB().then(() =>
     app.listen(process.env.PORT, () => {
       console.debug("server started", process.env.PORT);
     })
