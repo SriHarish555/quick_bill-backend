@@ -1,5 +1,6 @@
 const otpGenerator = require("otp-generator");
 const { mailSchema, otpSchema } = require("../validators/adminValidator");
+const redisClient = require("../config/redisClient");
 const {
   DynamoDBClient,
   PutItemCommand,
@@ -27,18 +28,12 @@ const generateOTP = async (req, res) => {
       upperCaseAlphabets: false,
       specialChars: false,
     });
+    const key = `otp:${email}`;
 
-    const storeParams = {
-      TableName: "otp",
-      Item: {
-        email: { S: email },
-        otp: { S: otp },
-        createdAt: { S: new Date().toISOString() },
-        expiresAt: { N: expire_at.toString() },
-      },
-    };
+    await redisClient.set(key, otp, {
+      EX: 300,
+    });
 
-    await client.send(new PutItemCommand(storeParams));
     transporter.sendMail(mailOptions(otp, email), (error, info) => {
       if (error) {
         res.json({ status: "failed", msg: "Failed to send Otp" });
@@ -60,19 +55,13 @@ const verifyOTP = async (req, res) => {
   }
   const { email, otp } = req.body;
   try {
-    const getParams = {
-      TableName: "otp",
-      Key: {
-        email: { S: email },
-      },
-    };
+    const key = `otp:${email}`;
 
-    const data = await client.send(new GetItemCommand(getParams));
+    const storedOtp = await redisClient.get(key);
 
-    if (!data.Item) {
+    if (!storedOtp) {
       return res.json({ status: "failed", msg: "Opt expired " });
     }
-    const storedOtp = data.Item.otp.S;
     if (storedOtp != otp) {
       return res.json({ status: "err", msg: "failed verifying" });
     }

@@ -6,6 +6,11 @@ const {
   DeleteItemCommand,
   GetItemCommand,
 } = require("@aws-sdk/client-dynamodb");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+  storeDynamoDB,
+} = require("../utils/generateToken");
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 
@@ -44,9 +49,16 @@ async function createSuperAdmin(req, res) {
       adminId,
       pwd: password,
     });
-    await newSuperAdmin.save();
+    const data = await newSuperAdmin.save();
+    const info = { _id: data._id, adminId: data.adminId, role: data.role };
+    const accessToken = generateAccessToken(info);
+    const refreshToken = generateRefreshToken(data._id);
+    storeDynamoDB(refreshToken, accessToken, adminId, "admin");
 
-    res.status(201).json({ msg: "Super Admin created successfully" });
+    res.status(201).json({
+      msg: "Super Admin created successfully",
+      tokens: { accessToken: accessToken, refreshToken: refreshToken },
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
