@@ -25,7 +25,7 @@ const superAdminSchema = new mongoose.Schema(
     acl: {
       type: Schema.Types.ObjectId,
       ref: "acls",
-      require: true,
+      required: true,
     },
   },
   { timestamps: true }

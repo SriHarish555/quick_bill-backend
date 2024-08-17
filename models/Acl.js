@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Permissions } = require("../utils/enum");
 
 const acl = new mongoose.Schema(
   {
@@ -10,15 +11,17 @@ const acl = new mongoose.Schema(
     permissions: {
       type: [String],
       enum: [
-        "CREATE_LEAD_ADMIN",
-        "EDIT_ACL",
-        "CREATE_ORDER",
-        "UPDATE_ORDER",
-        "DELETE_ORDER",
-        "VIEW_ORDER",
-        "MANAGE_USERS",
-        "MANAGE_CATEGORIES",
-        "MANAGE_ITEMS",
+        Permissions.CREATE_LEAD_ADMIN,
+        Permissions.CREATE_ORDER,
+        Permissions.CREATE_ROOT_ADMIN,
+        Permissions.DELETE_ORDER,
+        Permissions.EDIT_ACL,
+        Permissions.MANAGE_CATEGORIES,
+        Permissions.MANAGE_ITEMS,
+        Permissions.UPDATE_ORDER,
+        Permissions.UPDATE_ORDER,
+        Permissions.VIEW_ORDER,
+        Permissions.MANAGE_USERS,
       ],
       requireed: true,
     },

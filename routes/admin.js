@@ -1,4 +1,7 @@
-const { superAdminSchema } = require("../validators/adminValidator");
+const {
+  superAdminSchema,
+  rootAdminSchema,
+} = require("../validators/adminValidator");
 const SuperAdmin = require("../models/SuperAdmin");
 const acl = require("../models/Acl");
 const bcrypt = require("bcrypt");
@@ -33,6 +36,7 @@ async function createSuperAdmin(req, res) {
         Permissions.CREATE_LEAD_ADMIN,
         Permissions.EDIT_ACL,
         Permissions.MANAGE_USERS,
+        Permissions.CREATE_ROOT_ADMIN,
       ],
     });
     await superAdminACL.save();
@@ -46,7 +50,12 @@ async function createSuperAdmin(req, res) {
       acl: superAdminACL._id,
     });
     const data = await newSuperAdmin.save();
-    const info = { _id: data._id, adminId: data.adminId, role: data.role };
+    const info = {
+      _id: data._id,
+      adminId: data.adminId,
+      role: data.role,
+      aclId: superAdminACL._id,
+    };
     const accessToken = await generateAccessToken(info, adminId);
     const refreshToken = await generateRefreshToken(data._id, adminId, "admin");
 
@@ -62,4 +71,21 @@ async function createSuperAdmin(req, res) {
   }
 }
 
-module.exports = { createSuperAdmin };
+const createRootAdmin = (req, res) => {
+  const { error } = rootAdminSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ msg: error.details[0].message });
+  }
+  try {
+    const aclId = req.aclId;
+    if (!aclId) {
+      res.json({ status: "err", msg: "unknown server err" });
+    }
+    console.log(req.body, aclId);
+    res.send("received");
+  } catch (err) {
+    console.log("err", err);
+  }
+};
+
+module.exports = { createSuperAdmin, createRootAdmin };

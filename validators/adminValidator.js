@@ -51,8 +51,32 @@ const otpSchema = Joi.object({
     }),
 });
 
+const rootAdminSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.empty": "Email is required.",
+    "string.email": "Please provide a valid email address.",
+  }),
+  role: Joi.string().valid("ROOT_ADMIN").required().messages({
+    "any.only": "Role must be ROOT_ADMIN.",
+    "string.empty": "Role is required.",
+  }),
+  acl: Joi.array()
+    .items(
+      Joi.string().messages({
+        "string.base": "Each permission must be a string.",
+      })
+    )
+    .min(1)
+    .required()
+    .messages({
+      "array.min": "ACL must contain at least one permission.",
+      "array.base": "ACL must be an array of permissions.",
+    }),
+});
+
 module.exports = {
   superAdminSchema,
   mailSchema,
   otpSchema,
+  rootAdminSchema,
 };

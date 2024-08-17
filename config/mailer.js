@@ -88,4 +88,16 @@ const mailOptions = (otpvalue, email) => {
   };
 };
 
-module.exports = { transporter, mailOptions };
+const createAdmin = (email, uniqueUrl) => {
+  return {
+    to: email,
+    subject: "Complete Your Root Admin Registration",
+    html: `
+            <p>Please use the link below to complete your registration.</p>
+            <p><a href="${uniqueUrl}">Click this link to complete your registration</a></p>
+            <p>The link will expire after 24 hours.</p>
+        `,
+  };
+};
+
+module.exports = { transporter, mailOptions, createAdmin };

@@ -1,15 +1,16 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const rootAdminSchema = new mongoose.Schema(
   {
-    userId: {
+    name: {
+      type: String,
+      required: true,
+    },
+    adminId: {
       type: String,
       required: true,
       unique: true,
-    },
-    username: {
-      type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -20,11 +21,11 @@ const rootAdminSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role: {
-      type: String,
-      default: "root_admin",
+    acl: {
+      type: Schema.Types.ObjectId,
+      ref: "acls",
+      required: true,
     },
-    permissions: [String],
   },
   { timestamps: true }
 );
