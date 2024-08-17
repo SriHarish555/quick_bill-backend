@@ -24,13 +24,13 @@ const superAdminSchema = new mongoose.Schema(
     },
     acl: {
       type: Schema.Types.ObjectId,
-      ref: "ACL",
+      ref: "acls",
       require: true,
     },
   },
   { timestamps: true }
 );
 
-const SuperAdmin = mongoose.model("SuperAdmins", superAdminSchema);
+const SuperAdmin = mongoose.model("superadmins", superAdminSchema);
 
 module.exports = SuperAdmin;

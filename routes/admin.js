@@ -4,6 +4,7 @@ const acl = require("../models/Acl");
 const bcrypt = require("bcrypt");
 const redisClient = require("../config/redisClient");
 const logger = require("../utils/logger");
+const { Roles, Permissions } = require("../utils/enum");
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -27,8 +28,12 @@ async function createSuperAdmin(req, res) {
     await redisClient.sendCommand(["DEL", key]);
 
     const superAdminACL = new acl({
-      role: "SUPER_ADMIN",
-      permissions: ["CREATE_LEAD_ADMIN", "EDIT_ACL", "MANAGE_USERS"],
+      role: Roles.SUPER_ADMIN,
+      permissions: [
+        Permissions.CREATE_LEAD_ADMIN,
+        Permissions.EDIT_ACL,
+        Permissions.MANAGE_USERS,
+      ],
     });
     await superAdminACL.save();
 

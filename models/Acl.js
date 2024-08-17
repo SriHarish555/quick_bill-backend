@@ -26,5 +26,5 @@ const acl = new mongoose.Schema(
   { timestamps: true }
 );
 
-const aclSchema = mongoose.model("ACL", acl);
+const aclSchema = mongoose.model("acls", acl);
 module.exports = aclSchema;
