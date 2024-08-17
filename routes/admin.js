@@ -1,18 +1,12 @@
 const { superAdminSchema } = require("../validators/adminValidator");
 const SuperAdmin = require("../models/SuperAdmin");
 const bcrypt = require("bcrypt");
-const {
-  DynamoDBClient,
-  DeleteItemCommand,
-  GetItemCommand,
-} = require("@aws-sdk/client-dynamodb");
+const redisClient = require("../config/redisClient");
+const logger = require("../utils/logger");
 const {
   generateAccessToken,
   generateRefreshToken,
-  storeDynamoDB,
 } = require("../utils/generateToken");
-
-const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 async function createSuperAdmin(req, res) {
   const { error } = superAdminSchema.validate(req.body);
@@ -22,25 +16,14 @@ async function createSuperAdmin(req, res) {
 
   try {
     const { name, email, pwd, adminId } = req.body;
+    const key = `otp:${email}`;
+    const status = await redisClient.sendCommand(["HGET", key, "verified"]);
 
-    const getParams = {
-      TableName: "otp",
-      Key: {
-        email: { S: email },
-      },
-    };
-    const response = await client.send(new GetItemCommand(getParams));
-    if (!response.Item || !response.Item.verified.BOOL) {
+    if (status != "true") {
       return res.json({ status: "err", msg: "failed creating user" });
     }
 
-    const params = {
-      TableName: "otp",
-      Key: {
-        email: { S: email },
-      },
-    };
-    await client.send(new DeleteItemCommand(params));
+    await redisClient.sendCommand(["DEL", key]);
 
     const password = await bcrypt.hash(pwd, 10);
     const newSuperAdmin = new SuperAdmin({
@@ -51,9 +34,10 @@ async function createSuperAdmin(req, res) {
     });
     const data = await newSuperAdmin.save();
     const info = { _id: data._id, adminId: data.adminId, role: data.role };
-    const accessToken = generateAccessToken(info);
-    const refreshToken = generateRefreshToken(data._id);
-    storeDynamoDB(refreshToken, accessToken, adminId, "admin");
+    const accessToken = await generateAccessToken(info, adminId);
+    const refreshToken = await generateRefreshToken(data._id, adminId, "admin");
+
+    logger.info(`Super Admin created successfully`);
 
     res.status(201).json({
       msg: "Super Admin created successfully",

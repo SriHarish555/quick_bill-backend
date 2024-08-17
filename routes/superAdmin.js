@@ -18,7 +18,7 @@ const verify = async (req, res, next) => {
   next();
 };
 
-router.post("/admin", verify, createSuperAdmin);
+router.post("/admin/register", verify, createSuperAdmin);
 router.post("/otp/generate", verify, generateOTP);
 router.post("/otp/verify", verify, verifyOTP);
 

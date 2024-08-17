@@ -17,10 +17,15 @@ const superAdminSchema = Joi.object({
     "string.email": "Please provide a valid email address",
     "any.required": "Email is required",
   }),
-  pwd: Joi.string().min(6).required().messages({
-    "string.min": "Password should have a minimum length of {#limit}",
-    "any.required": "Password is required",
-  }),
+  pwd: Joi.string()
+    .pattern(new RegExp("(?=.*[0-9])"))
+    .min(6)
+    .required()
+    .messages({
+      "string.pattern.base": "Password should contain atleast 1 number",
+      "string.min": "Password should have a minimum length of {#limit}",
+      "any.required": "Password is required",
+    }),
 });
 
 const mailSchema = Joi.object({

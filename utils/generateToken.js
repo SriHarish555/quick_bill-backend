@@ -1,44 +1,30 @@
 const jwt = require("jsonwebtoken");
-const {
-  DynamoDBClient,
-  PutItemCommand,
-  GetItemCommand,
-  UpdateItemCommand,
-} = require("@aws-sdk/client-dynamodb");
+const redisClient = require("../config/redisClient");
+
 require("dotenv").config();
 
-const client = new DynamoDBClient({ region: process.env.AWS_REGION });
-
-const generateAccessToken = (info) => {
+const generateAccessToken = async (info, id) => {
   const token = jwt.sign(info, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "10d",
   });
-  return token;
-};
 
-const generateRefreshToken = (userId) => {
-  const token = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "30d",
+  const key = `AC_Token:${id}`;
+  await redisClient.set(key, token, {
+    EX: 864000,
   });
   return token;
 };
 
-const storeDynamoDB = async (refreshToken, accessToken, userId, type) => {
-  try {
-    const storeParams = {
-      TableName: "tokens",
-      Item: {
-        userId: { S: userId },
-        refreshToken: { S: refreshToken },
-        accessToken: { S: accessToken },
-        type: { S: type },
-        createdAt: { S: new Date().toISOString() },
-      },
-    };
-    await client.send(new PutItemCommand(storeParams));
-  } catch (err) {
-    console.debug("err in storing tokens");
-  }
+const generateRefreshToken = async (userId, id) => {
+  const token = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "30d",
+  });
+
+  const key = `RF_Token:${id}`;
+  await redisClient.set(key, token, {
+    EX: 2592000,
+  });
+  return token;
 };
 
-module.exports = { generateAccessToken, generateRefreshToken, storeDynamoDB };
+module.exports = { generateAccessToken, generateRefreshToken };

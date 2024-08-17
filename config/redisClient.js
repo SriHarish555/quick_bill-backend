@@ -1,20 +1,22 @@
 const { createClient } = require("redis");
+require("dotenv").config();
+const logger = require("../utils/logger");
 
 const client = createClient({
-  password: "cxu4hTsFciwrlha1rSs6VtSrUBROLedu",
+  password: process.env.REDIS_PASS,
   socket: {
-    host: "redis-14139.c305.ap-south-1-1.ec2.redns.redis-cloud.com",
-    port: 14139,
+    host: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT,
   },
 });
 
 client.on("error", (err) => {
-  console.error("Redis Client Error", err);
+  logger.error(`"Redis Client Error", err`);
 });
 
 (async () => {
   const log = await client.connect();
-  console.log("redis connected");
+  logger.info(`redis connected`);
 })();
 
 module.exports = client;

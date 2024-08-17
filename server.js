@@ -1,6 +1,7 @@
 const connectDB = require("./config/db");
 const express = require("express");
 const app = express();
+const logger = require("./utils/logger");
 require("dotenv").config();
 
 //?Middleware
@@ -16,26 +17,26 @@ app.get("/usr", async (req, res) => {
 try {
   connectDB().then(() =>
     app.listen(process.env.PORT, () => {
-      console.debug("server started", process.env.PORT);
+      logger.info(`Server started on port ${process.env.PORT}`);
     })
   );
 } catch (e) {
-  console.debug("Err starting server ", e);
+  logger.error(`Error starting server: ${e.message}`);
 }
 
 //!Err Handlers
 process.on("uncaughtException", (err) => {
-  console.error("There was an uncaught error", err);
+  logger.error(`Uncaught Exception: ${err.message}`, err);
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  logger.error(`Unhandled Rejection at: ${promise} - reason: ${reason}`);
 });
 
 process.on("SIGTERM", () => {
-  console.log("SIGTERM signal received. Shutting down gracefully...");
+  logger.info("SIGTERM signal received. Shutting down gracefully...");
   server.close(() => {
-    console.log("Process terminated");
+    logger.info("Process terminated");
   });
 });
