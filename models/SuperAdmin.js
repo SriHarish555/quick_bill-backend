@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const superAdminSchema = new mongoose.Schema(
   {
@@ -21,9 +22,10 @@ const superAdminSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role: {
-      type: String,
-      default: "super_admin",
+    acl: {
+      type: Schema.Types.ObjectId,
+      ref: "ACL",
+      require: true,
     },
   },
   { timestamps: true }

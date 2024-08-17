@@ -1,5 +1,6 @@
 const { superAdminSchema } = require("../validators/adminValidator");
 const SuperAdmin = require("../models/SuperAdmin");
+const acl = require("../models/Acl");
 const bcrypt = require("bcrypt");
 const redisClient = require("../config/redisClient");
 const logger = require("../utils/logger");
@@ -25,12 +26,19 @@ async function createSuperAdmin(req, res) {
 
     await redisClient.sendCommand(["DEL", key]);
 
+    const superAdminACL = new acl({
+      role: "SUPER_ADMIN",
+      permissions: ["CREATE_LEAD_ADMIN", "EDIT_ACL", "MANAGE_USERS"],
+    });
+    await superAdminACL.save();
+
     const password = await bcrypt.hash(pwd, 10);
     const newSuperAdmin = new SuperAdmin({
       name,
       email,
       adminId,
       pwd: password,
+      acl: superAdminACL._id,
     });
     const data = await newSuperAdmin.save();
     const info = { _id: data._id, adminId: data.adminId, role: data.role };
