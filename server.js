@@ -2,11 +2,13 @@ const connectDB = require("./config/db");
 const express = require("express");
 const app = express();
 const logger = require("./utils/logger");
+const swaggerDocs = require("./config/swagger");
 require("dotenv").config();
 
 //?Middleware
 
 app.use(express.json());
+swaggerDocs(app);
 app.use("/super", require("./routes/superAdmin"));
 app.use(require("./middlewares/checkSuperAdmin"));
 

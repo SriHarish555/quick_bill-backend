@@ -1,0 +1,25 @@
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Quick Bill API",
+      version: "1.0.0",
+      description: "API documentation for the Quick Bill application",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000/",
+      },
+    ],
+  },
+  apis: ["./utils/swaggerDocs.js"],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+module.exports = (app) => {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
