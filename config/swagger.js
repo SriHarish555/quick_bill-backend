@@ -11,11 +11,12 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000/",
+        url: "http://localhost:3000",
+        description: "Admin API server",
       },
     ],
   },
-  apis: ["./utils/swaggerDocs.js"],
+  apis: ["./utils/swaggerAdmin.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
