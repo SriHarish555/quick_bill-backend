@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: "http://13.60.238.179/",
         description: "Admin API server",
       },
     ],

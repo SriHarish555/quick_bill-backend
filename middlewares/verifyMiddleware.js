@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const AdminVerifyMiddleware = async (req, res, next) => {
   try {
-    const AccessToken = req.headers.authorization.split(" ")[1];
+    const AccessToken = req.headers?.authorization?.split(" ")[1];
 
     if (!AccessToken) {
       return res.json({ message: "Failed", error: "Illegal Access" });

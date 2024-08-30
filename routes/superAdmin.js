@@ -7,6 +7,7 @@ const SuperAdmin = require("../models/SuperAdmin");
 const AdminVerifyMiddleware = require("../middlewares/verifyMiddleware");
 
 const verify = async (req, res, next) => {
+  console.log("local")
   const { error } = mailSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ msg: error.details[0].message });
