@@ -50,6 +50,8 @@ const generateOTP = async (req, res) => {
       "false",
       "otpCreatedAt",
       Date.now().toString(),
+      "attempts",
+      "3",
     ]);
 
     await redisClient.expire(key, 300);
@@ -77,13 +79,35 @@ const verifyOTP = async (req, res) => {
   try {
     const key = `otp:${email}`;
 
-    const storedOtp = await redisClient.sendCommand(["HGET", key, "otp"]);
-
+    const [storedOtp, attemptsLeft] = await redisClient.sendCommand([
+      "HMGET",
+      key,
+      "otp",
+      "attempts",
+    ]);
     if (!storedOtp) {
       return res.json({ status: "failed", msg: "Opt expired " });
     }
+
     if (storedOtp != otp) {
-      return res.json({ status: "err", msg: "failed verifying" });
+      const newAttemptsLeft = parseInt(attemptsLeft, 10) - 1;
+      await redisClient.sendCommand([
+        "HSET",
+        key,
+        "attempts",
+        newAttemptsLeft.toString(),
+      ]);
+      if (parseInt(attemptsLeft, 10) <= 0) {
+        await redisClient.sendCommand(["DEL", key]);
+        return res.json({
+          status: "failed",
+          msg: `OTP attempts exceeded, OTP deleted`,
+        });
+      }
+      return res.json({
+        status: "err",
+        msg: `failed verifying, attempts remaining : ${attemptsLeft}`,
+      });
     }
 
     await redisClient.sendCommand(["HSET", key, "verified", "true"]);
