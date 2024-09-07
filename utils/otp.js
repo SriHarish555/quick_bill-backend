@@ -25,7 +25,7 @@ const generateOTP = async (req, res) => {
       const currentTime = Date.now();
       const elapsedTime = (currentTime - otpCreatedAt) / 1000;
 
-      if (elapsedTime < 50) {
+      if (elapsedTime < 60) {
         return res.status(400).json({
           message: `Please wait ${
             50 - Math.round(elapsedTime)
