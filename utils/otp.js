@@ -28,7 +28,7 @@ const generateOTP = async (req, res) => {
       if (elapsedTime < 60) {
         return res.status(400).json({
           message: `Please wait ${
-            50 - Math.round(elapsedTime)
+            60 - Math.round(elapsedTime)
           } seconds before requesting a new OTP.`,
         });
       }
