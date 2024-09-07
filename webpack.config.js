@@ -1,5 +1,6 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   mode: "production",
@@ -24,4 +25,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new Dotenv({
+      path: "./.env", // Path to your .env file (this is the default)
+    }),
+  ],
 };
