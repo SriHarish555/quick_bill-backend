@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://13.60.238.179/",
+        url: process.env.URL,
         description: "Admin API server",
       },
     ],
