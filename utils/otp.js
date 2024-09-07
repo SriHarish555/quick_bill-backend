@@ -97,7 +97,7 @@ const verifyOTP = async (req, res) => {
         "attempts",
         newAttemptsLeft.toString(),
       ]);
-      if (parseInt(attemptsLeft, 10) <= 0) {
+      if (parseInt(newAttemptsLeft, 10) <= 0) {
         await redisClient.sendCommand(["DEL", key]);
         return res.json({
           status: "failed",
@@ -106,7 +106,7 @@ const verifyOTP = async (req, res) => {
       }
       return res.json({
         status: "err",
-        msg: `failed verifying, attempts remaining : ${attemptsLeft}`,
+        msg: `failed verifying, attempts remaining : ${newAttemptsLeft}`,
       });
     }
 
