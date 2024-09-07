@@ -8,7 +8,7 @@ const { AdminVerifyMiddleware } = require("./middlewares/checkSuperAdmin");
 require("dotenv").config();
 
 //?Middleware
-
+app.set("trust proxy", true);
 app.use(express.json());
 swaggerDocs(app);
 app.use("/otp", otpRoutes);
