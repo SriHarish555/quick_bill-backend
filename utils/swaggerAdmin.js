@@ -38,16 +38,23 @@
 /**
  * @swagger
  * tags:
- *   - name: "Super Admin Creation"
+ *   - name: "OTP"
+ *     description: "APIs related to OTP functionalities"
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   - name: "Super Admin"
  *     description: "APIs related to Super Admin functionalities"
  */
 
 /**
  * @swagger
- * /super/otp/generate:
+ * /otp:
  *   post:
  *     summary: Generate an OTP
- *     tags: [Super Admin Creation]
+ *     tags: [OTP]
  *     requestBody:
  *       required: true
  *       content:
@@ -63,10 +70,10 @@
 
 /**
  * @swagger
- * /super/otp/verify:
+ * /otp/verify:
  *   post:
  *     summary: Verify an OTP
- *     tags: [Super Admin Creation]
+ *     tags: [OTP]
  *     requestBody:
  *       required: true
  *       content:
@@ -85,7 +92,7 @@
  * /super/admin/register:
  *   post:
  *     summary: Register a Super Admin
- *     tags: [Super Admin Creation]
+ *     tags: [Super Admin]
  *     requestBody:
  *       required: true
  *       content:
@@ -106,7 +113,7 @@
  * /super/admin/create:
  *   post:
  *     summary: Create a Root Admin
- *     tags: [Super Admin Creation]
+ *     tags: [Super Admin]
  *     requestBody:
  *       required: true
  *       content:

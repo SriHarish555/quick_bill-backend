@@ -12,6 +12,27 @@ const generateOTP = async (req, res) => {
   }
   try {
     const { email } = req.body;
+    const key = `otp:${email}`;
+
+    const otpExists = await redisClient.sendCommand(["HEXISTS", key, "otp"]);
+
+    if (otpExists === 1) {
+      const otpCreatedAt = await redisClient.sendCommand([
+        "HGET",
+        key,
+        "otpCreatedAt",
+      ]);
+      const currentTime = Date.now();
+      const elapsedTime = (currentTime - otpCreatedAt) / 1000;
+
+      if (elapsedTime < 50) {
+        return res.status(400).json({
+          message: `Please wait ${
+            50 - Math.round(elapsedTime)
+          } seconds before requesting a new OTP.`,
+        });
+      }
+    }
 
     const otp = otpGenerator.generate(4, {
       digits: true,
@@ -19,7 +40,6 @@ const generateOTP = async (req, res) => {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    const key = `otp:${email}`;
 
     await redisClient.sendCommand([
       "HSET",
@@ -28,6 +48,8 @@ const generateOTP = async (req, res) => {
       otp,
       "verified",
       "false",
+      "otpCreatedAt",
+      Date.now().toString(),
     ]);
 
     await redisClient.expire(key, 300);

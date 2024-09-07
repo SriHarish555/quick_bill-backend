@@ -3,14 +3,17 @@ const express = require("express");
 const app = express();
 const logger = require("./utils/logger");
 const swaggerDocs = require("./config/swagger");
+const otpRoutes = require("./routes/otpRoutes");
+const { AdminVerifyMiddleware } = require("./middlewares/checkSuperAdmin");
 require("dotenv").config();
 
 //?Middleware
 
 app.use(express.json());
 swaggerDocs(app);
-app.use("/super", require("./routes/superAdmin"));
-app.use(require("./middlewares/checkSuperAdmin"));
+app.use("/otp", otpRoutes);
+app.use("/super", require("./routes/superAdminRoutes"));
+app.use(AdminVerifyMiddleware);
 
 app.get("/usr", async (req, res) => {
   res.send("Success");
