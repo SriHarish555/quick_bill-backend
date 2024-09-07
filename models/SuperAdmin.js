@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+
 const Schema = mongoose.Schema;
 
 const superAdminSchema = new mongoose.Schema(
@@ -31,6 +33,19 @@ const superAdminSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const SuperAdmin = mongoose.model("superadmins", superAdminSchema);
+//!Triggers
+superAdminSchema.pre("save", async function (next) {
+  try {
+    if (!this.isModified("pwd")) {
+      return next();
+    }
+    const hashedPwd = await bcrypt.hash(this.pwd, 10);
+    this.pwd = hashedPwd;
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
+const SuperAdmin = mongoose.model("superadmins", superAdminSchema);
 module.exports = SuperAdmin;

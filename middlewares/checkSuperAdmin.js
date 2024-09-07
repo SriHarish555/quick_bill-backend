@@ -18,15 +18,19 @@ const AdminVerifyMiddleware = async (req, res, next) => {
 };
 
 const verify = async (req, res, next) => {
-  const { error } = mailSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ msg: error.details[0].message });
+  try {
+    const { error } = mailSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ msg: error.details[0].message });
+    }
+    const superAdminExists = await SuperAdmin.findOne();
+    if (superAdminExists) {
+      return res.status(400).json({ msg: "Super Admin already exists" });
+    }
+    next();
+  } catch (err) {
+    return res.status(500).send("Server error");
   }
-  const superAdminExists = await SuperAdmin.findOne();
-  if (superAdminExists) {
-    return res.status(400).json({ msg: "Super Admin already exists" });
-  }
-  next();
 };
 
 module.exports = { AdminVerifyMiddleware, verify };

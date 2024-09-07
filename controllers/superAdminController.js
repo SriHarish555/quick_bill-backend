@@ -4,7 +4,6 @@ const {
 } = require("../validators/adminValidator");
 const SuperAdmin = require("../models/SuperAdmin");
 const acl = require("../models/Acl");
-const bcrypt = require("bcrypt");
 const redisClient = require("../config/redisClient");
 const logger = require("../utils/logger");
 const { Roles, Permissions } = require("../utils/enum");
@@ -12,6 +11,8 @@ const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../utils/generateToken");
+
+//!Super Admin Creation
 
 async function createSuperAdmin(req, res) {
   const { error } = superAdminSchema.validate(req.body);
@@ -41,12 +42,11 @@ async function createSuperAdmin(req, res) {
     });
     await superAdminACL.save();
 
-    const password = await bcrypt.hash(pwd, 10);
     const newSuperAdmin = new SuperAdmin({
       name,
       email,
       adminId,
-      pwd: password,
+      pwd,
       acl: superAdminACL._id,
     });
     const data = await newSuperAdmin.save();
@@ -70,6 +70,8 @@ async function createSuperAdmin(req, res) {
     res.status(500).send("Server error");
   }
 }
+
+//!Root Admin Creation
 
 const createRootAdmin = (req, res) => {
   const { error } = rootAdminSchema.validate(req.body);
