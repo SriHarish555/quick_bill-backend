@@ -16,7 +16,7 @@ app.use("/super", require("./routes/superAdminRoutes"));
 app.use(AdminVerifyMiddleware);
 
 app.get("/usr", async (req, res) => {
-  console.log("ipaddress = ", req.ip,req);
+  console.log("ipaddress = ", req.ip,req.originalUrl);
   res.send("Success");
 });
 
