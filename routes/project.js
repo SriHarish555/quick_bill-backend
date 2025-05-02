@@ -4,5 +4,6 @@ const { saveData } = require("../controllers/projectController");
 
 
 router.post("/data",saveData);
+router.get("/analyze")
 
 module.exports = router;
