@@ -1,5 +1,5 @@
 
-const road = require("../models/road");
+const road = require("../models/Road");
 
 
 const saveData = (req,res)=>{
