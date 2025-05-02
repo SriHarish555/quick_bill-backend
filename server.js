@@ -13,6 +13,7 @@ app.use(express.json());
 swaggerDocs(app);
 app.use("/otp", otpRoutes);
 app.use("/super", require("./routes/superAdminRoutes"));
+app.use("/project", require("./routes/adminRoutes")); 
 app.use(AdminVerifyMiddleware);
 
 app.get("/usr", async (req, res) => {
