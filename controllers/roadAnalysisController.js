@@ -69,3 +69,5 @@ const analyze = async (req, res) => {
       res.status(500).json({ status: 'failed', message: 'An error occurred during the analysis.' });
     }
   };
+
+module.exports={analyze}
