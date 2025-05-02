@@ -74,7 +74,10 @@ const analyze = async (req, res) => {
   };
 
   const sendEmailAlert = async (cluster) => {
-    await transporter.sendMail(roadConditionAlert("sriharish.r2021ecec@sece.ac.in", cluster));
+    const mapsLinks = cluster.map((point, index) => {
+        return `${index + 1}. Location: (${point.latitude}, ${point.longitude}) - [View on Map](https://www.google.com/maps?q=${point.latitude},${point.longitude})`;
+      }).join('\n');
+    await transporter.sendMail(roadConditionAlert("sriharish.r2021ecec@sece.ac.in", mapsLinks));
     console.log("Email send successfully --")
   };
 
