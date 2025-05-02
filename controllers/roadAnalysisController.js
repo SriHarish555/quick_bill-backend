@@ -1,5 +1,5 @@
 const road = require("../models/Road");
-const transporter = require('../config/mailer');
+const {transporter} = require('../config/mailer');
 const {roadConditionAlert} = require("../config/mailer");
 
 
