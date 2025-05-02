@@ -25,10 +25,12 @@ app.get("/usr", async (req, res) => {
 
 app.get("/usr",async(req,res)=>{
 
+  const existingConfig = await Config.findOne();
+
   const configData = new Config({
-    "addData": true
+    "addData": !existingConfig?.addData 
   });
-  await configData.save()
+  await configData.save();
 
   res.send("Success");
 })
