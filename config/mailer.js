@@ -105,7 +105,7 @@ const roadConditionAlert = (email, clusterCoordinates) => {
       (point, index) =>
         `<li><strong>Location ${index + 1}:</strong> Latitude: ${point.latitude}, Longitude: ${point.longitude}</li>`
     ).join('');
-  
+
     return {
       to: email,
       subject: "🚨 Road Condition Alert - Hazard Detected",
