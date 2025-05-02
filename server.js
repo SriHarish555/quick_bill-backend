@@ -5,6 +5,8 @@ const logger = require("./utils/logger");
 const swaggerDocs = require("./config/swagger");
 const otpRoutes = require("./routes/otpRoutes");
 const { AdminVerifyMiddleware } = require("./middlewares/checkSuperAdmin");
+const Config = require("../models/Config");
+
 require("dotenv").config();
 
 //?Middleware
@@ -21,12 +23,15 @@ app.get("/usr", async (req, res) => {
   res.send("Success");
 });
 
-// app.post("/project/data",async(req,res)=>{
-//   req.body.time = new Date();
-//   console.log("ipaddress = ", req.ip,req.body);
+app.get("/usr",async(req,res)=>{
 
-//   res.send("Success");
-// })
+  const configData = new Config({
+    "addData": true
+  });
+  configData.save()
+
+  res.send("Success");
+})
 
 try {
   connectDB().then(() =>
