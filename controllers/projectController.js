@@ -7,7 +7,7 @@ const saveData = (req,res)=>{
     try {
         const {lattitude,longitude,distanceLeft,distanceRight} = req.body;
         const roadData = new road({
-            lattitude,
+            latitude,
             longitude,
             distanceLeft,
             distanceRight,
