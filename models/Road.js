@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const roadSchema = new mongoose.Schema(
     {
+        ip: {
+            type: String,
+            required: true,
+        },
         latitude: {
             type: Number,
             required: true,
