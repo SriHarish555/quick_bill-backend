@@ -5,7 +5,7 @@ const road = require("../models/Road");
 const saveData = (req,res)=>{
    
     try {
-        const {lattitude,longitude,distanceLeft,distanceRight} = req.body;
+        const {latitude,longitude,distanceLeft,distanceRight} = req.body;
         const roadData = new road({
             latitude,
             longitude,
