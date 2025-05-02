@@ -21,7 +21,9 @@ app.get("/usr", async (req, res) => {
 });
 
 app.post("/project/data",async(req,res)=>{
+  req.body.time = new Date();
   console.log("ipaddress = ", req.ip,req.body);
+
   res.send("Success");
 })
 
