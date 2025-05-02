@@ -6,7 +6,9 @@ const Config = require("../models/Config");
 const saveData = async (req,res)=>{
    
     try {
-        if(await Config.findOne({key:"addData"})){
+        const config = await Config.findOne(); 
+            
+        if(config?.addData || false){
         
             const {latitude,longitude,distanceLeft,distanceRight} = req.body;
             const roadData = new road({
