@@ -71,12 +71,26 @@ const analyze = async (req, res) => {
       res.status(500).json({ status: 'failed', message: 'An error occurred during the analysis.' });
     }
   };
-
   const sendEmailAlert = async (cluster) => {
-    console.log(cluster)
-    
-    await transporter.sendMail(roadConditionAlert("sriharish.r2021ecec@sece.ac.in", cluster));
-    console.log("Email send successfully --")
+    try {
+      if (!Array.isArray(cluster)) {
+        console.error("Expected an array for 'cluster', got:", cluster);
+        return;
+      }
+  
+      const mapsLinks = cluster.map((point, index) => {
+        return `${index + 1}. Location: (${point.latitude}, ${point.longitude}) - [View on Map](https://www.google.com/maps?q=${point.latitude},${point.longitude})`;
+      }).join('\n');
+  
+      await transporter.sendMail(
+        roadConditionAlert("sriharish.r2021ecec@sece.ac.in", mapsLinks)
+      );
+  
+      console.log("✅ Email sent successfully");
+    } catch (error) {
+      console.error("❌ Error sending email alert:", error);
+    }
   };
+  
 
 module.exports={analyze}
