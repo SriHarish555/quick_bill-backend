@@ -99,9 +99,10 @@ const createAdmin = (email, uniqueUrl) => {
         `,
   };
 };
-
 const roadConditionAlert = (email, clusterCoordinates) => {
-  const formattedCoords = clusterCoordinates.map(
+  const coordsArray = Array.isArray(clusterCoordinates) ? clusterCoordinates : [clusterCoordinates];
+
+  const formattedCoords = coordsArray.map(
     (point, index) =>
       `<li><strong>Location ${index + 1}:</strong> 
         Latitude: ${point.latitude}, Longitude: ${point.longitude} — 
@@ -144,6 +145,7 @@ const roadConditionAlert = (email, clusterCoordinates) => {
     `,
   };
 };
+
 
 
 module.exports = { transporter, mailOptions, createAdmin ,roadConditionAlert};
