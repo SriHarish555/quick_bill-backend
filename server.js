@@ -5,7 +5,7 @@ const logger = require("./utils/logger");
 const swaggerDocs = require("./config/swagger");
 const otpRoutes = require("./routes/otpRoutes");
 const { AdminVerifyMiddleware } = require("./middlewares/checkSuperAdmin");
-const Config = require("../models/Config");
+const Config = require("./models/Config");
 
 require("dotenv").config();
 
