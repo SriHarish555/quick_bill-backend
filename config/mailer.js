@@ -100,16 +100,50 @@ const createAdmin = (email, uniqueUrl) => {
   };
 };
 
-const roadConditionAlert = (to, mapsLinks) => ({
-  from: '"Road Condition Alert" <your_email@example.com>',
-  to,
-  subject: '🚨 Bad Road Condition Detected',
-  text: `Bad road conditions detected at the following locations:\n\n${mapsLinks}`,
-  html: `<p>Bad road conditions detected at the following locations:</p><ul>${mapsLinks
-    .split('\n')
-    .map(line => `<li>${line}</li>`)
-    .join('')}</ul>`
-});
+const roadConditionAlert = (email, clusterCoordinates) => {
+  const formattedCoords = clusterCoordinates.map(
+    (point, index) =>
+      `<li><strong>Location ${index + 1}:</strong> 
+        Latitude: ${point.latitude}, Longitude: ${point.longitude} — 
+        <a href="https://www.google.com/maps?q=${point.latitude},${point.longitude}" target="_blank">
+          View on Map
+        </a>
+      </li>`
+  ).join('');
+
+  return {
+    to: email,
+    subject: "🚨 Road Condition Alert - Hazard Detected",
+    html: `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; }
+            .container { max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            h2 { color: #d9534f; }
+            ul { padding-left: 20px; }
+            li { margin-bottom: 8px; }
+            a { color: #0275d8; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            .footer { margin-top: 20px; font-size: 12px; color: #999; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h2>🚧 Potential Road Hazard Detected</h2>
+            <p>Dear Team,</p>
+            <p>We have detected poor road conditions in the following cluster of locations:</p>
+            <ul>${formattedCoords}</ul>
+            <p>Please investigate and take necessary actions.</p>
+            <div class="footer">
+              <p>This is an automated message. Do not reply directly to this email.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  };
+};
 
 
 module.exports = { transporter, mailOptions, createAdmin ,roadConditionAlert};
