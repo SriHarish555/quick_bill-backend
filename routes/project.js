@@ -5,6 +5,6 @@ const {analyze} = require("../controllers/roadAnalysisController")
 
 
 router.post("/data",saveData);
-router.get("/analyze",road)
+router.get("/analyze",analyze)
 
 module.exports = router;
