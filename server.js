@@ -20,6 +20,11 @@ app.get("/usr", async (req, res) => {
   res.send("Success");
 });
 
+app.post("/project/data",async(req,res)=>{
+  console.log("ipaddress = ", req.ip,req.body);
+  res.send("Success");
+})
+
 try {
   connectDB().then(() =>
     app.listen(process.env.PORT, () => {
