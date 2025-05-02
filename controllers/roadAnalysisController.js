@@ -1,4 +1,6 @@
 const road = require("../models/Road");
+const transporter = require('../config/mailer');
+
 
 
 const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -59,7 +61,7 @@ const analyze = async (req, res) => {
         if (badConditionCount / cluster.length > 0.5) {
           // Trigger email alert
           console.log(cluster)
-        //   await sendEmailAlert(cluster);
+          await sendEmailAlert(cluster);
         }
       });
   
@@ -68,6 +70,11 @@ const analyze = async (req, res) => {
       console.error("Error during road condition analysis:", error);
       res.status(500).json({ status: 'failed', message: 'An error occurred during the analysis.' });
     }
+  };
+
+  const sendEmailAlert = async (cluster) => {
+    await transporter.sendMail(roadConditionAlert("sriharish7635@gmail.com", cluster));
+    console.log("Email send successfully")
   };
 
 module.exports={analyze}
