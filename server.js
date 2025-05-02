@@ -13,7 +13,7 @@ app.use(express.json());
 swaggerDocs(app);
 app.use("/otp", otpRoutes);
 app.use("/super", require("./routes/superAdminRoutes"));
-app.use("/project", require("./routes/adminRoutes")); 
+app.use("/project", require("./routes/project")); 
 app.use(AdminVerifyMiddleware);
 
 app.get("/usr", async (req, res) => {
@@ -21,12 +21,12 @@ app.get("/usr", async (req, res) => {
   res.send("Success");
 });
 
-app.post("/project/data",async(req,res)=>{
-  req.body.time = new Date();
-  console.log("ipaddress = ", req.ip,req.body);
+// app.post("/project/data",async(req,res)=>{
+//   req.body.time = new Date();
+//   console.log("ipaddress = ", req.ip,req.body);
 
-  res.send("Success");
-})
+//   res.send("Success");
+// })
 
 try {
   connectDB().then(() =>
