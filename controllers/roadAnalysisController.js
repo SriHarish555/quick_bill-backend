@@ -74,8 +74,8 @@ const analyze = async (req, res) => {
   };
 
   const sendEmailAlert = async (cluster) => {
-    await transporter.sendMail(roadConditionAlert("sriharish7635@gmail.com", cluster));
-    console.log("Email send successfully")
+    await transporter.sendMail(roadConditionAlert("sriharish.r2021ecec@sece.ac.in", cluster));
+    console.log("Email send successfully --")
   };
 
 module.exports={analyze}
