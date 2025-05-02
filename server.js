@@ -28,7 +28,7 @@ app.get("/usr",async(req,res)=>{
   const configData = new Config({
     "addData": true
   });
-  configData.save()
+  await configData.save()
 
   res.send("Success");
 })
