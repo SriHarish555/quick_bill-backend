@@ -13,6 +13,7 @@ const saveData = (req,res)=>{
             distanceRight,
         });
         roadData.save();
+        console.log("data saved in db ");
         res.status(200).json({status:"success",msg:"data saved successfully"});
         
     } catch (err) {
