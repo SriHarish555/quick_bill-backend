@@ -30,6 +30,7 @@ app.get("/usr",async(req,res)=>{
   const configData = new Config({
     "addData": !existingConfig?.addData 
   });
+  console.log(existingConfig)
   res.send("Success",await configData.save());
 })
 
