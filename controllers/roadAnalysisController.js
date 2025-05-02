@@ -18,7 +18,7 @@ const analyze = async (req, res) => {
       const thresholdDistance = 0.001; // threshold for considering the same location (in degrees)
       const badConditionThreshold = 10; // threshold for bad road conditions (in meters)
   
-      const data = await Road.find();
+      const data = await road.find();
       const clusters = [];
   
       // Group the data based on proximity
