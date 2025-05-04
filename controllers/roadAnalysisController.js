@@ -57,12 +57,13 @@ const analyze = async (req, res) => {
             badConditionCount++;
           }
         });
+
+        console.log("cluster data",cluster);
   
         // If the majority of points in the cluster have bad conditions, trigger an action
-        if (badConditionCount / cluster.length > 0.5) {
           // Trigger email alert
           await sendEmailAlert(cluster);
-        }
+        
       });
   
       res.status(200).json({ status: 'success', message: 'Analysis completed and alerts sent if necessary.' });
