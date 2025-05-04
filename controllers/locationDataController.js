@@ -29,4 +29,5 @@ const getLocation = async (req, res) => {
   }
 };
 
+
 module.exports = { getLocation };
