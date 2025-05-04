@@ -5,7 +5,7 @@ function generateHazardPoints(data) {
     .map(doc => {
       const { latitude, longitude, distanceLeft, distanceRight } = doc;
 
-        if (distanceLeft <= 0 || distanceRight <=0) {
+        if (distanceLeft <= 0 || distanceRight <=0 || latitude <= 0 || longitude <= 0) {
             return null;
         }
 
