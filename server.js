@@ -6,11 +6,13 @@ const swaggerDocs = require("./config/swagger");
 const otpRoutes = require("./routes/otpRoutes");
 const { AdminVerifyMiddleware } = require("./middlewares/checkSuperAdmin");
 const Config = require("./models/Config");
+const cors = require("cors");
 
 require("dotenv").config();
 
 //?Middleware
 app.set("trust proxy", true);
+app.use(cors());
 app.use(express.json());
 swaggerDocs(app);
 app.use("/otp", otpRoutes);
