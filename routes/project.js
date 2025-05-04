@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { saveData } = require("../controllers/projectController");
 const {analyze} = require("../controllers/roadAnalysisController");
-const {getLocation} = require ("../controllers/locationController");
+const {getLocation} = require ("../controllers/locationDataController");
 
 
 router.post("/data",saveData);
