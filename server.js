@@ -12,7 +12,6 @@ require("dotenv").config();
 
 //?Middleware
 app.use(cors());
-
 app.set("trust proxy", true);
 app.use(express.json());
 swaggerDocs(app);
