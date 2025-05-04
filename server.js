@@ -11,8 +11,9 @@ const cors = require("cors");
 require("dotenv").config();
 
 //?Middleware
-app.set("trust proxy", true);
 app.use(cors());
+
+app.set("trust proxy", true);
 app.use(express.json());
 swaggerDocs(app);
 app.use("/otp", otpRoutes);
