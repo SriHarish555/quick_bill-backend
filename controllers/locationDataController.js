@@ -5,6 +5,10 @@ function generateHazardPoints(data) {
     .map(doc => {
       const { latitude, longitude, distanceLeft, distanceRight } = doc;
 
+        if (distanceLeft <= 0 || distanceRight <=0) {
+            return null;
+        }
+
       if (distanceLeft < 25 || distanceRight < 25) {
         return { latitude, longitude, type: "bump" };
       }
